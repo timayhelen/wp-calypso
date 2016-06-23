@@ -84,7 +84,8 @@ if ( typeof window === 'object' ) {
 	middleware = [
 		require( 'lib/screen-title' ).screenTitleMiddleware,
 		...middleware,
-		require( './analytics/middleware.js' ).analyticsMiddleware
+		require( './analytics/middleware.js' ).analyticsMiddleware,
+		require( './wp-api/middleware.js' ).wpApiMiddleware
 	];
 }
 
