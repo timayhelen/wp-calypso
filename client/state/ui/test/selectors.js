@@ -37,7 +37,7 @@ describe( 'selectors', () => {
 				}
 			} );
 
-			expect( selected ).to.eql( { ID: 2916284, name: 'WordPress.com Example Blog' } );
+			expect( selected ).to.contain( { ID: 2916284, name: 'WordPress.com Example Blog' } );
 		} );
 	} );
 
