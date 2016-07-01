@@ -23,10 +23,13 @@ import getAttributes from 'lib/site/computed-attributes';
  * @param  {Number}  siteId Site ID
  * @return {?Object}        Site object
  */
-export function getSite( state, siteId ) {
-	const site = state.sites.items[ siteId ];
-	return site ? Object.assign( site, getAttributes( site ) ) : null;
-}
+export const getSite = createSelector(
+	( state, siteId ) => {
+		const site = state.sites.items[ siteId ];
+		return site ? Object.assign( site, getAttributes( site ) ) : null;
+	},
+	( state ) => state.sites.items
+);
 
 /**
  * Returns a filtered array of WordPress.com site IDs where a Jetpack site
