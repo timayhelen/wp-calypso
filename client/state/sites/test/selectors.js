@@ -40,7 +40,20 @@ describe( 'selectors', () => {
 				}
 			}, 2916284 );
 
-			expect( site ).to.eql( { ID: 2916284, name: 'WordPress.com Example Blog' } );
+			expect( site ).to.contain( { ID: 2916284, name: 'WordPress.com Example Blog' } );
+		} );
+
+		it( 'should return computed attributes', () => {
+			const site = getSite( {
+				sites: {
+					items: {
+						2916284: { ID: 2916284, name: 'WordPress.com Example Blog' }
+					}
+				}
+			}, 2916284 );
+
+			expect( site ).to.contain( { ID: 2916284, title: 'WordPress.com Example Blog', } );
+			expect( site.options ).to.contain( { default_post_format: 'standard' } );
 		} );
 	} );
 

@@ -169,7 +169,7 @@ describe( 'reducer', () => {
 			} );
 
 			expect( state ).to.eql( {
-				2916284: { ID: 2916284, name: 'WordPress.com Example Blog', slug: 'example.wordpress.com' }
+				2916284: { ID: 2916284, name: 'WordPress.com Example Blog' }
 			} );
 		} );
 
@@ -185,7 +185,7 @@ describe( 'reducer', () => {
 			} );
 
 			expect( state ).to.eql( {
-				2916284: { ID: 2916284, name: 'WordPress.com Example Blog', slug: 'example.wordpress.com' }
+				2916284: { ID: 2916284, name: 'WordPress.com Example Blog' }
 			} );
 		} );
 
