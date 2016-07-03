@@ -28,7 +28,7 @@ var	translationDataFromPage = {
 		localeCode: 'en',
 		languageName: 'English',
 		pluralForms: 'nplurals=2; plural=(n != 1)',
-		contentChangedCallback: function() {},
+		contentChangedCallback() {},
 		glotPress: {
 			url: 'https://translate.wordpress.com',
 			project: 'test'
@@ -44,7 +44,7 @@ var	translationDataFromPage = {
  *     will add the data tags that the translator needs.
  */
 const communityTranslatorJumpstart = {
-	isEnabled: function() {
+	isEnabled() {
 		if ( ! config.isEnabled( 'community-translator' ) ) {
 			return false;
 		}
@@ -70,11 +70,11 @@ const communityTranslatorJumpstart = {
 
 		return true;
 	},
-	isActivated: function() {
+	isActivated() {
 		return _shouldWrapTranslations;
 	},
 
-	wrapTranslation: function( originalFromPage, displayedTranslationFromPage, optionsFromPage ) {
+	wrapTranslation( originalFromPage, displayedTranslationFromPage, optionsFromPage ) {
 		var props;
 
 		if ( ! this.isEnabled() || ! this.isActivated() ) {
@@ -118,7 +118,7 @@ const communityTranslatorJumpstart = {
 		return dataElement;
 	},
 
-	init: function() {
+	init() {
 		const languageJson = i18n.getLocale() || { '': {} },
 			localeCode = languageJson[ '' ].localeSlug;
 
@@ -150,7 +150,7 @@ const communityTranslatorJumpstart = {
 		initialized = true;
 	},
 
-	updateTranslationData: function( localeCode, languageJson ) {
+	updateTranslationData( localeCode, languageJson ) {
 		const languages = config( 'languages' );
 
 		if ( translationDataFromPage.localeCode === localeCode ) {
@@ -180,12 +180,12 @@ const communityTranslatorJumpstart = {
 		}
 	},
 
-	setInjectionURL: function( jsFile ) {
+	setInjectionURL( jsFile ) {
 		injectUrl = communityTranslatorBaseUrl + jsFile + '?v=' + communityTranslatorVersion;
 		debug( 'setting injection url', injectUrl );
 	},
 
-	toggle: function() {
+	toggle() {
 		let unregisteredHandleWarning = false;
 
 		translationDataFromPage.contentChangedCallback = () => {
@@ -247,7 +247,7 @@ const communityTranslatorJumpstart = {
 	},
 
 	// Merge a Community Translator TranslationPair into the i18n locale
-	updateTranslation: function( newTranslation ) {
+	updateTranslation( newTranslation ) {
 		const locale = i18n.getLocale(),
 			key = newTranslation.key,
 			plural = newTranslation.plural,
@@ -261,7 +261,7 @@ const communityTranslatorJumpstart = {
 		i18n.setLocale( locale );
 	},
 
-	isValidBrowser: function() {
+	isValidBrowser() {
 		if ( isMobile() ) {
 			return false;
 		}
