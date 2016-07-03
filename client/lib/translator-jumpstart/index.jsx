@@ -181,7 +181,6 @@ const communityTranslatorJumpstart = {
 	},
 
 	setInjectionURL: function( jsFile ) {
-		debug( 'setting Injection URL' );
 		injectUrl = communityTranslatorBaseUrl + jsFile + '?v=' + communityTranslatorVersion;
 		debug( 'setting injection url', injectUrl );
 	},
