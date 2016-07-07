@@ -21,7 +21,7 @@ import {
 	getPlansBySite,
 	getCurrentPlan
 } from 'state/sites/plans/selectors';
-import { getSelectedSite } from 'state/ui/selectors';
+import { getSelectedSite, getSelectedSiteId } from 'state/ui/selectors';
 import { fetchSitePlans } from 'state/sites/plans/actions';
 import {
 	isBusiness,
@@ -58,8 +58,6 @@ const PlanDetailsComponent = React.createClass( {
 			'is-expiring': plan.userFacingExpiryMoment < this.moment().add( 30, 'days' )
 		} );
 
-		console.log(plan);
-
 		return (
 			<div className={ classes }>
 				<span className="current-plan__expires-in">
@@ -67,9 +65,11 @@ const PlanDetailsComponent = React.createClass( {
 						args: plan.userFacingExpiryMoment.format( 'LL' )
 					} ) }
 				</span>
-				<Button compact>
-					{ this.translate( 'Renew Now' ) }
-				</Button>
+				{ plan.userIsOwner &&
+					<Button compact href={ `/purchases/${ this.props.selectedSite.slug }/${ plan.id }` }>
+						{ this.translate( 'Renew Now' ) }
+					</Button>
+				}
 			</div>
 		);
 	},
@@ -170,7 +170,7 @@ export default connect(
 		return {
 			selectedSite: getSelectedSite( state ),
 			sitePlans: getPlansBySite( state, getSelectedSite( state ) ),
-			currentPlan: getCurrentPlan( state, getSelectedSite( state ).ID )
+			currentPlan: getCurrentPlan( state, getSelectedSiteId( state ) )
 		};
 	},
 	dispatch => ( {
