@@ -20,6 +20,7 @@ import {
 describe( 'selectors', () => {
 	beforeEach( () => {
 		getTermsForQuery.memoizedSelector.cache.clear();
+		getTermsForQueryIgnoringPage.memoizedSelector.cache.clear();
 		getTermsHierarchyForQueryIgnoringPage.memoizedSelector.cache.clear();
 	} );
 

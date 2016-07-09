@@ -4,13 +4,20 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
-import includes from 'lodash/includes';
 import { localize } from 'i18n-calypso';
-import debounce from 'lodash/debounce';
-import range from 'lodash/range';
 import VirtualScroll from 'react-virtualized/VirtualScroll';
-import difference from 'lodash/difference';
-import isEqual from 'lodash/isEqual';
+import {
+	debounce,
+	difference,
+	findIndex,
+	get,
+	includes,
+	isEqual,
+	max,
+	memoize,
+	min,
+	range,
+} from 'lodash';
 
 /**
  * Internal dependencies
@@ -79,6 +86,7 @@ const TermTreeSelectorList = React.createClass( {
 		this.virtualScroll = null;
 
 		this.queueRecomputeRowHeights = debounce( this.recomputeRowHeights );
+		this.getFlattenedIndexExtreme = memoize( this.getFlattenedIndexExtreme, ( ...args ) => args.join() );
 		this.debouncedSearch = debounce( () => {
 			this.props.onSearch( this.state.searchTerm );
 		}, SEARCH_DEBOUNCE_TIME_MS );
@@ -87,6 +95,11 @@ const TermTreeSelectorList = React.createClass( {
 	componentWillReceiveProps( nextProps ) {
 		if ( nextProps.taxonomy !== this.props.taxonomy ) {
 			this.setState( this.getInitialState() );
+		}
+
+		if ( this.props.terms !== nextProps.terms ||
+				this.props.termsHierarchy !== nextProps.termsHierarchy ) {
+			this.getFlattenedIndexExtreme.cache.clear();
 		}
 	},
 
@@ -135,9 +148,10 @@ const TermTreeSelectorList = React.createClass( {
 
 	setRequestedPages( { startIndex, stopIndex } ) {
 		const { requestedPages } = this.state;
+
 		const pagesToRequest = difference( range(
-			this.getPageForIndex( startIndex - LOAD_OFFSET ),
-			this.getPageForIndex( stopIndex + LOAD_OFFSET ) + 1
+			this.getPageForIndex( this.getFlattenedIndexExtreme( startIndex, 'min' ) - LOAD_OFFSET ),
+			this.getPageForIndex( this.getFlattenedIndexExtreme( stopIndex, 'max' ) + LOAD_OFFSET ) + 1
 		), requestedPages );
 
 		if ( ! pagesToRequest.length ) {
@@ -220,6 +234,39 @@ const TermTreeSelectorList = React.createClass( {
 		return range( 0, this.getRowCount() ).reduce( ( memo, index ) => {
 			return memo + this.getRowHeight( { index } );
 		}, 0 );
+	},
+
+	getFlattenedItemIndexExtreme( item, extreme ) {
+		const { terms } = this.props;
+		const { items: children, ID } = item;
+
+		const flattenedIndex = findIndex( terms, { ID: ID } );
+		if ( ! children ) {
+			return flattenedIndex;
+		}
+
+		return ( 'min' === extreme ? min : max )( children.map( ( child ) => {
+			return this.getFlattenedItemIndexExtreme( child, extreme );
+		} ) );
+	},
+
+	/**
+	 * Given an index of a rendered row, returns the index of that index's item
+	 * or its descendant in the flattened array of posts corresponding to the
+	 * given extreme function as a string ("min" or "max"). If an item cannot
+	 * be found at the specified index, the original value is returned.
+	 *
+	 * @param  {Number} index   Rendered row index
+	 * @param  {String} extreme Extreme function, as a string ("min", "max")
+	 * @return {Number}         Flattened index extreme
+	 */
+	getFlattenedIndexExtreme( index, extreme ) {
+		const item = get( this.props.termsHierarchy, index );
+		if ( ! item ) {
+			return index;
+		}
+
+		return this.getFlattenedItemIndexExtreme( item, extreme );
 	},
 
 	getResultsWidth() {

@@ -84,14 +84,21 @@ export const getTermsForQuery = createSelector(
  * @param  {Object}  query    Terms query object
  * @return {?Array}           Terms for the query
  */
-export function getTermsForQueryIgnoringPage( state, siteId, taxonomy, query ) {
-	const manager = get( state.terms.queries, [ siteId, taxonomy ] );
-	if ( ! manager ) {
-		return null;
-	}
+export const getTermsForQueryIgnoringPage = createSelector(
+	( state, siteId, taxonomy, query ) => {
+		const manager = get( state.terms.queries, [ siteId, taxonomy ] );
+		if ( ! manager ) {
+			return null;
+		}
 
-	return manager.getItemsIgnoringPage( query );
-}
+		return manager.getItemsIgnoringPage( query );
+	},
+	( state, siteId, taxonomy ) => get( state.terms.queries, [ siteId, taxonomy ] ),
+	( state, siteId, taxonomy, query ) => {
+		const serializedQuery = getSerializedTermsQuery( query );
+		return [ siteId, taxonomy, serializedQuery ].join();
+	}
+);
 
 /**
  * Returns an hierarchical array of terms for the taxonomies query, or null if no terms have been
