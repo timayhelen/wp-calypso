@@ -21,12 +21,17 @@ var StepWrapper = require( 'signup/step-wrapper' ),
 	{ getCurrentUser, currentUserHasFlag } = require( 'state/current-user/selectors' ),
 	{ DOMAINS_WITH_PLANS_ONLY } = require( 'state/current-user/constants' ),
 	analyticsMixin = require( 'lib/mixins/analytics' ),
-	signupUtils = require( 'signup/utils' );
+	signupUtils = require( 'signup/utils' ),
+	getUsernameSuggestion = require( 'lib/signup/step-actions' ).getUsernameSuggestion;
 
 const registerDomainAnalytics = analyticsMixin( 'registerDomain' ),
 	mapDomainAnalytics = analyticsMixin( 'mapDomain' );
 
 const DomainsStep = React.createClass( {
+	contextTypes: {
+		store: React.PropTypes.object
+	},
+
 	showGoogleApps: function() {
 		page( signupUtils.getStepUrl( this.props.flowName, this.props.stepName, 'google', this.props.locale ) );
 	},
@@ -134,6 +139,9 @@ const DomainsStep = React.createClass( {
 		}, this.getThemeArgs() ), [], { domainItem } );
 
 		this.props.goToNextStep();
+
+		 // Start the username suggestion process.
+		getUsernameSuggestion( siteUrl.split( '.' )[ 0 ], this.context.store );
 	},
 
 	handleAddMapping: function( sectionName, domain, state ) {

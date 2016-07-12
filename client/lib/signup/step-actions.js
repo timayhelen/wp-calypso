@@ -18,6 +18,10 @@ import SignupCart from 'lib/signup/cart';
 import { startFreeTrial } from 'lib/upgrades/actions';
 import { PLAN_PREMIUM } from 'lib/plans/constants';
 
+import {
+	SIGNUP_OPTIONAL_DEPENDENCY_SUGGESTED_USERNAME,
+} from 'state/action-types';
+
 function addDomainItemsToCart( callback, dependencies, { domainItem, googleAppsCartItem, isPurchasingItem, siteUrl, themeSlug, themeSlugWithRepo, themeItem } ) {
 	wpcom.undocumented().sitesNew( {
 		blog_name: siteUrl,
@@ -137,6 +141,68 @@ function setThemeOnSite( callback, { siteSlug }, { themeSlug } ) {
 	} );
 }
 
+/**
+ * Gets username suggestions from the API.
+ *
+ * Ask the API to validate a username.
+ *
+ * If the API returns a suggestion, then the username is already taken.
+ * If there is no error from the API, then the username is free.
+ *
+ * @param {string} username The username to get suggestions for.
+ * @param {object} reduxState The Redux state object
+ */
+function getUsernameSuggestion( username, reduxState ) {
+	const fields = {
+		givesuggestions: 1,
+		username: username
+	};
+
+	// Clear out the local storage variable before sending the call.
+	reduxState.dispatch( {
+		type: SIGNUP_OPTIONAL_DEPENDENCY_SUGGESTED_USERNAME,
+		data: ''
+	} );
+
+	wpcom.undocumented().validateNewUser( fields, ( error, response ) => {
+		if ( error || ! response ) {
+			return null;
+		}
+
+		/**
+		 * Default the suggested username to `username` because if the validation succeeds would mean
+		 * that the username is free
+		 */
+		let resulting_username = username;
+
+		/**
+		 * Only start checking for suggested username if the API returns an error for the validation.
+		 */
+		if ( ! response.success ) {
+			const { messages } = response;
+
+			/**
+			 * The only case we want to update username field is when the username is already taken.
+			 *
+			 * This ensures that the validation is done
+			 *
+			 * Check for:
+			 *    - username taken error -
+			 *    - a valid suggested username
+			 */
+			if ( messages.username && messages.username.taken && messages.suggested_username ) {
+				resulting_username = messages.suggested_username.suggested_username;
+			}
+		}
+
+		// Save the suggested username for later use
+		reduxState.dispatch( {
+			type: SIGNUP_OPTIONAL_DEPENDENCY_SUGGESTED_USERNAME,
+			data: resulting_username
+		} );
+	} );
+}
+
 module.exports = {
 	addDomainItemsToCart: addDomainItemsToCart,
 
@@ -205,5 +271,7 @@ module.exports = {
 		} );
 	},
 
-	setThemeOnSite: setThemeOnSite
+	setThemeOnSite: setThemeOnSite,
+
+	getUsernameSuggestion: getUsernameSuggestion
 };

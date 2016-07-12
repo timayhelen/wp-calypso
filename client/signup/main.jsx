@@ -49,7 +49,13 @@ const MINIMUM_TIME_LOADING_SCREEN_IS_DISPLAYED = 8000;
 const Signup = React.createClass( {
 	displayName: 'Signup',
 
+	contextTypes: {
+		store: React.PropTypes.object
+	},
+
 	getInitialState() {
+		SignupDependencyStore.setReduxStore( this.context.store );
+
 		return {
 			login: false,
 			progress: SignupProgressStore.get(),
@@ -185,13 +191,13 @@ const Signup = React.createClass( {
 	componentDidMount() {
 		debug( 'Signup component mounted' );
 		SignupProgressStore.on( 'change', this.loadProgressFromStore );
-		SignupProgressStore.on( 'change', this.loadDependenciesFromStore );
+		this.unsubscribeSignupDepStoreListener = SignupDependencyStore.reduxStore.subscribe( this.loadDependenciesFromStore );
 	},
 
 	componentWillUnmount() {
 		debug( 'Signup component unmounted' );
 		SignupProgressStore.off( 'change', this.loadProgressFromStore );
-		SignupProgressStore.off( 'change', this.loadDependenciesFromStore );
+		this.unsubscribeSignupDepStoreListener();
 	},
 
 	loginRedirectTo( path ) {

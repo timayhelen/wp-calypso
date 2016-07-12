@@ -30,7 +30,7 @@ import formState from 'lib/form-state';
 import LoggedOutFormLinks from 'components/logged-out-form/links';
 import LoggedOutFormLinkItem from 'components/logged-out-form/link-item';
 import LoggedOutFormFooter from 'components/logged-out-form/footer';
-import { getValueFromProgressStore, mergeFormWithValue, getFlowSteps } from 'signup/utils';
+import { mergeFormWithValue } from 'signup/utils';
 
 const VALIDATION_DELAY_AFTER_FIELD_CHANGES = 1500,
 	debug = debugModule( 'calypso:signup-form:form' );
@@ -48,6 +48,10 @@ const resetAnalyticsData = () => {
 export default React.createClass( {
 
 	displayName: 'SignupForm',
+
+	contextTypes: {
+		store: React.PropTypes.object
+	},
 
 	getInitialState() {
 		return {
@@ -68,25 +72,13 @@ export default React.createClass( {
 	},
 
 	autoFillUsername( form ) {
-		const steps = getFlowSteps( this.props.flowName );
-		const domainSteps = steps.filter( step => step.match( /^domain/ ) );
-		let domainName = getValueFromProgressStore( {
-			stepName: domainSteps[0] || null,
-			fieldName: 'siteUrl',
-			signupProgressStore: this.props.signupProgressStore
-		} );
-		const siteName = getValueFromProgressStore( {
-			stepName: 'site',
-			fieldName: 'site',
-			signupProgressStore: this.props.signupProgressStore
-		} );
-		if ( domainName ) {
-			domainName = domainName.split( '.' )[ 0 ];
-		}
+		// Fetch the suggested username from local storage
+		const suggestedUsername = this.context.store.getState().signup.optionalDependencies.suggestedUsername;
+
 		return mergeFormWithValue( {
 			form,
 			fieldName: 'username',
-			fieldValue: siteName || domainName || null
+			fieldValue: suggestedUsername || undefined
 		} );
 	},
 
@@ -103,9 +95,11 @@ export default React.createClass( {
 			initialState: this.props.step ? this.props.step.form : undefined
 		} );
 		let initialState = this.formStateController.getInitialState();
+
 		if ( this.props.signupProgressStore ) {
 			initialState = this.autoFillUsername( initialState );
 		}
+
 		this.setState( { form: initialState } );
 	},
 
