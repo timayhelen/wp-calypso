@@ -8,6 +8,7 @@ import { noop } from 'lodash';
 /**
  * Internal dependencies
  */
+import PostQueryManager from 'lib/query-manager/post';
 import noticesMiddleware, {
 	handlers,
 	dispatchSuccess,
@@ -90,12 +91,19 @@ describe( 'middleware', () => {
 				}, () => ( {
 					posts: {
 						items: {
-							'3d097cb7c5473c169bba0eb8e3c6cb64': {
-								ID: 841,
-								site_ID: 2916284,
-								global_ID: '3d097cb7c5473c169bba0eb8e3c6cb64',
-								title: 'Hello World, This Should Be Truncated'
-							}
+							'3d097cb7c5473c169bba0eb8e3c6cb64': [ 2916284, 841 ]
+						},
+						queries: {
+							2916284: new PostQueryManager( {
+								items: {
+									841: {
+										ID: 841,
+										site_ID: 2916284,
+										global_ID: '3d097cb7c5473c169bba0eb8e3c6cb64',
+										title: 'Hello World, This Should Be Truncated'
+									}
+								}
+							} )
 						}
 					}
 				} ) );
@@ -116,7 +124,8 @@ describe( 'middleware', () => {
 					postId: 841
 				}, () => ( {
 					posts: {
-						items: {}
+						items: {},
+						queries: {}
 					}
 				} ) );
 
@@ -139,12 +148,19 @@ describe( 'middleware', () => {
 				}, () => ( {
 					posts: {
 						items: {
-							'3d097cb7c5473c169bba0eb8e3c6cb64': {
-								ID: 841,
-								site_ID: 2916284,
-								global_ID: '3d097cb7c5473c169bba0eb8e3c6cb64',
-								title: 'Hello World, This Should Be Truncated'
-							}
+							'3d097cb7c5473c169bba0eb8e3c6cb64': [ 2916284, 841 ]
+						},
+						queries: {
+							2916284: new PostQueryManager( {
+								items: {
+									841: {
+										ID: 841,
+										site_ID: 2916284,
+										global_ID: '3d097cb7c5473c169bba0eb8e3c6cb64',
+										title: 'Hello World, This Should Be Truncated'
+									}
+								}
+							} )
 						}
 					}
 				} ) );
@@ -165,7 +181,8 @@ describe( 'middleware', () => {
 					postId: 841
 				}, () => ( {
 					posts: {
-						items: {}
+						items: {},
+						queries: {}
 					}
 				} ) );
 
