@@ -3,8 +3,6 @@
  */
 import React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import assign from 'lodash/assign';
 import page from 'page';
 
 /**
@@ -14,9 +12,12 @@ import Site from 'my-sites/site';
 import Card from 'components/card';
 import Button from 'components/button';
 import Gridicon from 'components/gridicon';
-import * as PreviewActions from 'state/preview/actions';
+import RootChild from 'components/root-child';
+import { clearCustomizations, fetchPreviewMarkup, saveCustomizations } from 'state/preview/actions';
+import { isPreviewUnsaved, getPreviewCustomizations } from 'state/preview/selectors';
+import { getSelectedSite, getSelectedSiteId } from 'state/ui/selectors';
 import accept from 'lib/accept';
-import DesignToolData from 'my-sites/design-menu/design-tool-data';
+import designTool from 'my-sites/design-menu/design-tool-data';
 import DesignToolList from 'my-sites/design-tool-list';
 import SiteTitleControl from 'my-sites/site-title';
 import HeaderImageControl from 'my-sites/header-image';
@@ -24,15 +25,21 @@ import HomePageSettings from 'my-sites/home-page-settings';
 import SiteLogoControl from 'my-sites/site-logo';
 import DesignMenuPanel from 'my-sites/design-menu-panel';
 
+const WrappedSiteTitleControl = designTool( SiteTitleControl );
+const WrappedSiteLogoControl = designTool( SiteLogoControl );
+const WrappedHeaderImageControl = designTool( HeaderImageControl );
+const WrappedHomePageSettings = designTool( HomePageSettings );
+
 const DesignMenu = React.createClass( {
 
 	propTypes: {
 		// These are provided by the connect method
-		state: React.PropTypes.object.isRequired,
 		isUnsaved: React.PropTypes.bool,
 		customizations: React.PropTypes.object,
 		selectedSite: React.PropTypes.object.isRequired,
-		actions: React.PropTypes.object.isRequired,
+		clearCustomizations: React.PropTypes.func.isRequired,
+		fetchPreviewMarkup: React.PropTypes.func.isRequired,
+		saveCustomizations: React.PropTypes.func.isRequired,
 	},
 
 	getDefaultProps() {
@@ -49,9 +56,9 @@ const DesignMenu = React.createClass( {
 	},
 
 	componentWillMount() {
-		this.props.actions.clearCustomizations( this.props.selectedSite.ID );
+		this.props.clearCustomizations( this.props.selectedSite.ID );
 		// Fetch the preview
-		this.props.actions.fetchPreviewMarkup( this.props.selectedSite.ID, '' );
+		this.props.fetchPreviewMarkup( this.props.selectedSite.ID, '' );
 	},
 
 	activateDesignTool( activeDesignToolId ) {
@@ -63,7 +70,7 @@ const DesignMenu = React.createClass( {
 	},
 
 	onSave() {
-		this.props.actions.saveCustomizations();
+		this.props.saveCustomizations();
 	},
 
 	onBack() {
@@ -77,12 +84,12 @@ const DesignMenu = React.createClass( {
 		if ( this.props.isUnsaved ) {
 			return accept( this.translate( 'You have unsaved changes. Are you sure you want to close the preview?' ), accepted => {
 				if ( accepted ) {
-					this.props.actions.clearCustomizations( this.props.selectedSite.ID );
+					this.props.clearCustomizations( this.props.selectedSite.ID );
 					this.closeDesignMenu();
 				}
 			} );
 		}
-		this.props.actions.clearCustomizations( this.props.selectedSite.ID );
+		this.props.clearCustomizations( this.props.selectedSite.ID );
 		this.closeDesignMenu();
 	},
 
@@ -97,33 +104,25 @@ const DesignMenu = React.createClass( {
 			case 'siteTitle':
 				return (
 					<DesignMenuPanel label={ this.translate( 'Title and Tagline' ) }>
-						<DesignToolData previewDataKey={ this.state.activeDesignToolId } >
-							<SiteTitleControl />
-						</DesignToolData>
+						<WrappedSiteTitleControl previewDataKey="siteTitle" />
 					</DesignMenuPanel>
 				);
 			case 'siteLogo':
 				return (
 					<DesignMenuPanel label={ this.translate( 'Logo' ) }>
-						<DesignToolData previewDataKey={ this.state.activeDesignToolId } >
-							<SiteLogoControl />
-						</DesignToolData>
+						<WrappedSiteLogoControl previewDataKey="siteLogo" />
 					</DesignMenuPanel>
 				);
 			case 'headerImage':
 				return (
 					<DesignMenuPanel label={ this.translate( 'Header Image' ) }>
-						<DesignToolData previewDataKey={ this.state.activeDesignToolId } >
-							<HeaderImageControl />
-						</DesignToolData>
+						<WrappedHeaderImageControl previewDataKey="headerImage" />
 					</DesignMenuPanel>
 				);
 			case 'homePage':
 				return (
 					<DesignMenuPanel label={ this.translate( 'Homepage Settings' ) }>
-						<DesignToolData previewDataKey={ this.state.activeDesignToolId } >
-							<HomePageSettings />
-						</DesignToolData>
+						<WrappedHomePageSettings previewDataKey="homePage" />
 					</DesignMenuPanel>
 				);
 			default:
@@ -134,7 +133,7 @@ const DesignMenu = React.createClass( {
 	renderSiteCard() {
 		// The site object required by Site isn't quite the same as the one in the
 		// Redux store, so we patch it.
-		const site = assign( {}, this.props.selectedSite, {
+		const site = Object.assign( {}, this.props.selectedSite, {
 			title: this.props.selectedSite.name,
 			domain: this.props.selectedSite.URL.replace( /^https?:\/\//, '' ),
 		} );
@@ -144,39 +143,39 @@ const DesignMenu = React.createClass( {
 	render() {
 		const saveButtonText = ! this.props.isUnsaved ? this.translate( 'Saved' ) : this.translate( 'Publish Changes' );
 		return (
-			<div className="design-menu">
-				<span className="current-site__switch-sites">
-					<Button compact borderless onClick={ this.onBack }>
-						<Gridicon icon="arrow-left" size={ 18 } />
-						{ this.translate( 'Back' ) }
-					</Button>
-					{ this.renderSiteCard() }
-					<Card className="design-menu__header-buttons">
-						<Button primary compact disabled={ ! this.props.isUnsaved } className="design-menu__save" onClick={ this.onSave } >{ saveButtonText }</Button>
-					</Card>
-				</span>
-				{ this.renderActiveDesignTool() }
-			</div>
+			<RootChild>
+				<div className="design-menu">
+					<span className="design-menu__sidebar">
+						<Button compact borderless onClick={ this.onBack }>
+							<Gridicon icon="arrow-left" size={ 18 } />
+							{ this.translate( 'Back' ) }
+						</Button>
+						{ this.renderSiteCard() }
+						<Card className="design-menu__header-buttons">
+							<Button primary compact
+								disabled={ ! this.props.isUnsaved }
+								className="design-menu__save"
+								onClick={ this.onSave }
+							>{ saveButtonText }</Button>
+						</Card>
+					</span>
+					{ this.renderActiveDesignTool() }
+				</div>
+			</RootChild>
 		);
 	}
 } );
 
 function mapStateToProps( state ) {
-	const siteId = state.ui.selectedSiteId;
-	const selectedSite = state.sites.items[ siteId ] || {};
-	if ( ! state.preview || ! state.preview[ siteId ] ) {
-		return { state, selectedSite };
-	}
-	return { state, selectedSite, customizations: state.preview[ siteId ].customizations, isUnsaved: state.preview[ siteId ].isUnsaved };
-}
-
-function mapDispatchToProps( dispatch ) {
+	const siteId = getSelectedSiteId( state );
 	return {
-		actions: bindActionCreators( PreviewActions, dispatch ),
+		selectedSite: getSelectedSite( state ),
+		customizations: getPreviewCustomizations( state, siteId ),
+		isUnsaved: isPreviewUnsaved( state, siteId ),
 	};
 }
 
 export default connect(
 	mapStateToProps,
-	mapDispatchToProps
+	{ clearCustomizations, fetchPreviewMarkup, saveCustomizations }
 )( DesignMenu );
