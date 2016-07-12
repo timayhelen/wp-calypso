@@ -2,22 +2,16 @@
  * External dependencies
  */
 import React from 'react';
-import noop from 'lodash/noop';
 import classNames from 'classnames';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 
 /**
  * Internal dependencies
  */
-import { getSelectedSite } from 'state/ui/selectors';
 import Card from 'components/card';
 import PostSelector from 'my-sites/post-selector';
 import FormFieldset from 'components/forms/form-fieldset';
 import FormLegend from 'components/forms/form-legend';
 import FormLabel from 'components/forms/form-label';
-import * as PreviewActions from 'state/preview/actions';
-import { requestSitePosts } from 'state/posts/actions';
 
 const HomePageSettings = React.createClass( {
 	propTypes: {
@@ -26,14 +20,9 @@ const HomePageSettings = React.createClass( {
 		isPageOnFront: React.PropTypes.bool,
 		pageOnFrontId: React.PropTypes.number,
 		pageForPostsId: React.PropTypes.number,
-		onChange: React.PropTypes.func,
-		actions: React.PropTypes.object,
-	},
-
-	getDefaultProps() {
-		return {
-			onChange: noop,
-		};
+		onChange: React.PropTypes.func.isRequired,
+		requestSitePosts: React.PropTypes.func.isRequired,
+		createHomePage: React.PropTypes.func.isRequired,
 	},
 
 	getInitialState() {
@@ -41,7 +30,7 @@ const HomePageSettings = React.createClass( {
 	},
 
 	componentWillMount() {
-		this.props.actions.requestSitePosts( this.props.site.ID, { type: 'page' } );
+		this.props.requestSitePosts( this.props.site.ID, { type: 'page' } );
 	},
 
 	componentWillReceiveProps( nextProps ) {
@@ -56,13 +45,13 @@ const HomePageSettings = React.createClass( {
 	},
 
 	createHomePage() {
-		this.props.actions.createHomePage();
+		this.props.createHomePage();
 	},
 
 	getDefaultPageId() {
 		const homePages = this.props.pages.filter( page => page.title === 'Home' );
 		if ( homePages.length > 0 ) {
-			return homePages[0].ID;
+			return homePages[ 0 ].ID;
 		}
 		return null;
 	},
@@ -149,24 +138,4 @@ const HomePageSettings = React.createClass( {
 	}
 } );
 
-function mapStateToProps( state, ownProps ) {
-	const selectedSite = getSelectedSite( state ) || {}
-	const pages = Object.keys( state.posts.items )
-	.map( key => state.posts.items[ key ] )
-	.filter( post => post.type === 'page' );
-	const isPageOnFront = ownProps.hasOwnProperty( 'isPageOnFront' ) ? ownProps.isPageOnFront : selectedSite.options.show_on_front === 'page';
-	const pageOnFrontId = ownProps.pageOnFrontId || selectedSite.options.page_on_front;
-	const pageForPostsId = ownProps.pageForPostsId || selectedSite.options.page_for_posts;
-	return { pages, site: selectedSite, isPageOnFront, pageOnFrontId, pageForPostsId };
-}
-
-function mapDispatchToProps( dispatch ) {
-	return {
-		actions: bindActionCreators( {
-			createHomePage: PreviewActions.createHomePage,
-			requestSitePosts,
-		}, dispatch )
-	};
-}
-
-export default connect( mapStateToProps, mapDispatchToProps )( HomePageSettings );
+export default HomePageSettings;

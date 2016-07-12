@@ -2,14 +2,10 @@
  * External dependencies
  */
 import React from 'react';
-import { connect } from 'react-redux';
-import get from 'lodash/get';
-import noop from 'lodash/noop';
 
 /**
  * Internal dependencies
  */
-import { getSelectedSite } from 'state/ui/selectors';
 import ImageSelector from 'components/image-selector';
 
 const SiteLogoControl = React.createClass( {
@@ -17,18 +13,12 @@ const SiteLogoControl = React.createClass( {
 		site: React.PropTypes.object.isRequired,
 		logoUrl: React.PropTypes.string,
 		logoPostId: React.PropTypes.number,
-		onChange: React.PropTypes.func,
-	},
-
-	getDefaultProps() {
-		return {
-			onChange: noop,
-		}
+		onChange: React.PropTypes.func.isRequired,
 	},
 
 	setImage( selectedItems ) {
 		if ( selectedItems && selectedItems.length ) {
-			const newImage = selectedItems[0];
+			const newImage = selectedItems[ 0 ];
 			this.props.onChange( { logoUrl: newImage.URL, logoPostId: newImage.ID } );
 		}
 	},
@@ -51,11 +41,4 @@ const SiteLogoControl = React.createClass( {
 	}
 } );
 
-function mapStateToProps( state, ownProps ) {
-	const site = getSelectedSite( state ) || {}
-	const logoPostId = ownProps.hasOwnProperty( 'logoPostId' ) ? ownProps.logoPostId : get( site, 'logo.id' );
-	const logoUrl = ownProps.hasOwnProperty( 'logoUrl ' ) ? ownProps.logoUrl : get( site, 'logo.url' );
-	return { site, logoPostId, logoUrl };
-}
-
-export default connect( mapStateToProps )( SiteLogoControl );
+export default SiteLogoControl;
