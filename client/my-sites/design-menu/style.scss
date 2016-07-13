@@ -5,7 +5,7 @@ $border-color: #ddd;
 	transition: all 0.15s cubic-bezier(0.075, 0.820, 0.165, 1.000);
 }
 
-.design-menu__sidebar {
+.design-menu__header {
 	background: $sidebar-bg-color;
 	border-bottom: 1px solid darken( $sidebar-bg-color, 5% );
 	display: block;
@@ -30,24 +30,6 @@ $border-color: #ddd;
 		.button.is-borderless:focus {
 			color: $sidebar-text-color;
 		}
-	}
-}
-
-.focus-design {
-	.wp-primary {
-		opacity: 0.2;
-		pointer-events: none;
-	}
-
-	.wp-secondary .design-menu {
-		opacity: 1;
-		transform: translateX( 272px );
-		pointer-events: auto;
-	}
-
-	.sidebar,
-	.wp-secondary .site-selector {
-		pointer-events: none;
 	}
 }
 

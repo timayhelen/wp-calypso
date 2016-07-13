@@ -4,14 +4,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import page from 'page';
+import classnames from 'classnames';
 
 /**
  * Internal dependencies
  */
-import Site from 'my-sites/site';
-import Card from 'components/card';
-import Button from 'components/button';
-import Gridicon from 'components/gridicon';
 import RootChild from 'components/root-child';
 import { clearCustomizations, fetchPreviewMarkup, saveCustomizations } from 'state/preview/actions';
 import { isPreviewUnsaved, getPreviewCustomizations } from 'state/preview/selectors';
@@ -24,6 +21,7 @@ import HeaderImageControl from 'my-sites/header-image';
 import HomePageSettings from 'my-sites/home-page-settings';
 import SiteLogoControl from 'my-sites/site-logo';
 import DesignMenuPanel from 'my-sites/design-menu-panel';
+import DesignMenuHeader from './design-menu-header';
 
 const WrappedSiteTitleControl = designTool( SiteTitleControl );
 const WrappedSiteLogoControl = designTool( SiteLogoControl );
@@ -130,35 +128,26 @@ const DesignMenu = React.createClass( {
 		}
 	},
 
-	renderSiteCard() {
+	getSiteCardSite() {
 		// The site object required by Site isn't quite the same as the one in the
 		// Redux store, so we patch it.
-		const site = Object.assign( {}, this.props.selectedSite, {
+		return Object.assign( {}, this.props.selectedSite, {
 			title: this.props.selectedSite.name,
 			domain: this.props.selectedSite.URL.replace( /^https?:\/\//, '' ),
 		} );
-		return <Site site={ site } />;
 	},
 
 	render() {
-		const saveButtonText = ! this.props.isUnsaved ? this.translate( 'Saved' ) : this.translate( 'Publish Changes' );
+		const classNames = classnames( 'design-menu' );
 		return (
 			<RootChild>
-				<div className="design-menu">
-					<span className="design-menu__sidebar">
-						<Button compact borderless onClick={ this.onBack }>
-							<Gridicon icon="arrow-left" size={ 18 } />
-							{ this.translate( 'Back' ) }
-						</Button>
-						{ this.renderSiteCard() }
-						<Card className="design-menu__header-buttons">
-							<Button primary compact
-								disabled={ ! this.props.isUnsaved }
-								className="design-menu__save"
-								onClick={ this.onSave }
-							>{ saveButtonText }</Button>
-						</Card>
-					</span>
+				<div className={ classNames }>
+					<DesignMenuHeader
+						site={ this.getSiteCardSite() }
+						isUnsaved={ this.props.isUnsaved }
+						onBack={ this.onBack }
+						onSave={ this.onSave }
+					/>
 					{ this.renderActiveDesignTool() }
 				</div>
 			</RootChild>
