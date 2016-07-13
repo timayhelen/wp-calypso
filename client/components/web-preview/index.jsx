@@ -54,7 +54,9 @@ const WebPreview = React.createClass( {
 		// Optional loading message to display during loading
 		loadingMessage: React.PropTypes.string,
 		// The iframe's title element, used for accessibility purposes
-		iframeTitle: React.PropTypes.string
+		iframeTitle: React.PropTypes.string,
+		// Makes room for a sidebar if desired
+		hasSidebar: React.PropTypes.bool,
 	},
 
 	mixins: [ PureRenderMixin ],
@@ -68,6 +70,7 @@ const WebPreview = React.createClass( {
 			previewMarkup: null,
 			onLoad: noop,
 			onClose: noop,
+			hasSidebar: false,
 		};
 	},
 
@@ -206,6 +209,7 @@ const WebPreview = React.createClass( {
 	render() {
 		const className = classnames( this.props.className, 'web-preview', {
 			'is-touch': this._hasTouch,
+			'is-with-sidebar': this.props.hasSidebar,
 			'is-visible': this.props.showPreview,
 			'is-computer': this.state.device === 'computer',
 			'is-tablet': this.state.device === 'tablet',
