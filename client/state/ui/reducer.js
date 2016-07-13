@@ -10,6 +10,8 @@ import {
 	SELECTED_SITE_SET,
 	SECTION_SET,
 	PREVIEW_IS_SHOWING,
+	PREVIEW_SHOW_SIDEBAR,
+	PREVIEW_HIDE_SIDEBAR,
 	PREVIEW_URL_CLEAR,
 	PREVIEW_URL_SET,
 	SERIALIZE,
@@ -98,12 +100,23 @@ export function currentPreviewUrl( state = null, action ) {
 	return state;
 }
 
+export function isPreviewSidebarShowing( state = false, action ) {
+	switch ( action.type ) {
+		case PREVIEW_SHOW_SIDEBAR:
+			return true;
+		case PREVIEW_HIDE_SIDEBAR:
+			return false;
+	}
+	return state;
+}
+
 const reducer = combineReducers( {
 	section,
 	isLoading,
 	hasSidebar,
 	isPreviewShowing,
 	currentPreviewUrl,
+	isPreviewSidebarShowing,
 	selectedSiteId,
 	recentlySelectedSiteIds,
 	guidedTour,
