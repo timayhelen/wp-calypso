@@ -72,6 +72,7 @@ const ImageSelector = React.createClass( {
 				<EditorDrawerWell
 					onClick={ this.openMediaModal }
 					onRemove={ this.props.onRemove }
+					empty={ ! this.props.imagePostId }
 					icon="image"
 					label={ this.props.label }>
 					{ this.renderCurrentImage() }
