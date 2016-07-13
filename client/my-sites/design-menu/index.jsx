@@ -31,10 +31,11 @@ const WrappedHomePageSettings = designTool( HomePageSettings );
 const DesignMenu = React.createClass( {
 
 	propTypes: {
+		isVisible: React.PropTypes.bool,
 		// These are provided by the connect method
 		isUnsaved: React.PropTypes.bool,
 		customizations: React.PropTypes.object,
-		selectedSite: React.PropTypes.object.isRequired,
+		selectedSite: React.PropTypes.object,
 		clearCustomizations: React.PropTypes.func.isRequired,
 		fetchPreviewMarkup: React.PropTypes.func.isRequired,
 		saveCustomizations: React.PropTypes.func.isRequired,
@@ -42,6 +43,7 @@ const DesignMenu = React.createClass( {
 
 	getDefaultProps() {
 		return {
+			isVisible: false,
 			isUnsaved: false,
 			customizations: {},
 		};
@@ -54,6 +56,9 @@ const DesignMenu = React.createClass( {
 	},
 
 	componentWillMount() {
+		if ( ! this.props.selectedSite ) {
+			return;
+		}
 		this.props.clearCustomizations( this.props.selectedSite.ID );
 		// Fetch the preview
 		this.props.fetchPreviewMarkup( this.props.selectedSite.ID, '' );
@@ -79,6 +84,9 @@ const DesignMenu = React.createClass( {
 	},
 
 	maybeCloseDesignMenu() {
+		if ( ! this.props.selectedSite ) {
+			return;
+		}
 		if ( this.props.isUnsaved ) {
 			return accept( this.translate( 'You have unsaved changes. Are you sure you want to close the preview?' ), accepted => {
 				if ( accepted ) {
@@ -92,6 +100,9 @@ const DesignMenu = React.createClass( {
 	},
 
 	closeDesignMenu() {
+		if ( ! this.props.selectedSite ) {
+			return;
+		}
 		const siteSlug = this.props.selectedSite.URL.replace( /^https?:\/\//, '' );
 		page( `/stats/${siteSlug}` );
 		// TODO: go where?
@@ -129,6 +140,9 @@ const DesignMenu = React.createClass( {
 	},
 
 	getSiteCardSite() {
+		if ( ! this.props.selectedSite ) {
+			return;
+		}
 		// The site object required by Site isn't quite the same as the one in the
 		// Redux store, so we patch it.
 		return Object.assign( {}, this.props.selectedSite, {
@@ -138,7 +152,15 @@ const DesignMenu = React.createClass( {
 	},
 
 	render() {
-		const classNames = classnames( 'design-menu' );
+		const classNames = classnames( 'design-menu', { 'is-visible': this.props.isVisible } );
+		if ( ! this.props.selectedSite ) {
+			return (
+				<RootChild>
+					<div className={ classNames }>
+					</div>
+				</RootChild>
+			);
+		}
 		return (
 			<RootChild>
 				<div className={ classNames }>
