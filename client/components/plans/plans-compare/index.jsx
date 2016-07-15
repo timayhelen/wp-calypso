@@ -73,6 +73,13 @@ const wordAdsFeature = {
 const PlansCompare = React.createClass( {
 	mixins: [ observe( 'features' ) ],
 
+	componentWillMount() {
+		this.setFreePlan = () => this.setPlan( 'free' );
+		this.setPersonalPlan = () => this.setPlan( 'personal' );
+		this.setPremiumPlan = () => this.setPlan( 'premium' );
+		this.setBusinessPlan = () => this.setPlan( 'business' );
+	},
+
 	componentWillReceiveProps( nextProps ) {
 		this.props.fetchSitePlans( nextProps.sitePlans, nextProps.selectedSite );
 	},
@@ -136,11 +143,7 @@ const PlansCompare = React.createClass( {
 			return false;
 		}
 
-		if ( this.props.sitePlans && this.props.sitePlans.hasLoadedFromServer ) {
-			return false;
-		}
-
-		return true;
+		return ! ( this.props.sitePlans && this.props.sitePlans.hasLoadedFromServer );
 	},
 
 	isSelected( plan ) {
@@ -439,7 +442,7 @@ const PlansCompare = React.createClass( {
 
 		let freeOption = (
 			<NavItem
-				onClick={ this.setPlan.bind( this, 'free' ) }
+				onClick={ this.setFreePlan }
 				selected={ 'free' === this.state.selectedPlan }>
 				{ this.translate( 'Free' ) }
 			</NavItem>
@@ -454,21 +457,27 @@ const PlansCompare = React.createClass( {
 				<SectionNav selectedText={ text[ this.state.selectedPlan ] }>
 					<NavTabs>
 						{ freeOption }
+
 						{ this.isPersonalPlanTestEnabled() &&
-						<NavItem
-							onClick={ this.setPlan.bind( this, 'personal' ) }
-							selected={ 'personal' === this.state.selectedPlan }>
-							{ this.translate( 'Personal' ) }
-						</NavItem>
+							<NavItem
+								onClick={ this.setPersonalPlan }
+								selected={ 'personal' === this.state.selectedPlan }
+							>
+								{ this.translate( 'Personal' ) }
+							</NavItem>
 						}
+
 						<NavItem
-							onClick={ this.setPlan.bind( this, 'premium' ) }
-							selected={ 'premium' === this.state.selectedPlan }>
+							onClick={ this.setPremiumPlan }
+							selected={ 'premium' === this.state.selectedPlan }
+						>
 							{ this.translate( 'Premium' ) }
 						</NavItem>
+
 						<NavItem
-							onClick={ this.setPlan.bind( this, 'business' ) }
-							selected={ 'business' === this.state.selectedPlan }>
+							onClick={ this.setBusinessPlan }
+							selected={ 'business' === this.state.selectedPlan }
+						>
 							{ this.translate( 'Business' ) }
 						</NavItem>
 					</NavTabs>
