@@ -92,4 +92,13 @@ module.exports = {
 		defaultVariation: 'noNotice',
 		allowAnyLocale: true
 	},
+	jetpackConnectPlansFirst: {
+		datestamp: '20160715',
+		variations: {
+			showPlansBeforeAuth: 50,
+			showPlansAfterAuth: 50
+		},
+		defaultVariation: 'showPlansAfterAuth',
+		allowExistingUsers: true
+	},
 };
