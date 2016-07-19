@@ -17,9 +17,10 @@ import PostTypeListPostThumbnail from './post-thumbnail';
 import PostActionsEllipsisMenu from './post-actions-ellipsis-menu';
 import PostTypePostAuthor from './post-type-post-author';
 
-export function PostTypeListPost( { translate, globalId, post, editUrl, className } ) {
+export function PostTypeListPost( { translate, globalId, post, editUrl, className, mini } ) {
 	const classes = classnames( 'post-type-list__post', className, {
-		'is-untitled': ! post.title
+		'is-untitled': ! post.title,
+		'is-mini': mini
 	} );
 
 	return (
@@ -47,7 +48,8 @@ PostTypeListPost.propTypes = {
 	translate: PropTypes.func,
 	globalId: PropTypes.string,
 	post: PropTypes.object,
-	className: PropTypes.string
+	className: PropTypes.string,
+	mini: PropTypes.bool
 };
 
 export default connect( ( state, ownProps ) => {

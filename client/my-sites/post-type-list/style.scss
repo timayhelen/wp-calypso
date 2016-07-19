@@ -101,3 +101,20 @@
 	margin-top: -3px;
 	margin-right: 6px;
 }
+
+.post-type-list__post.is-mini.card.is-compact {
+	padding: 8px 16px;
+
+	.post-type-list__post-meta {
+		display: none;
+	}
+
+	.post-type-list__post-title {
+		font-size: 14px;
+		margin: 0;
+	}
+
+	.post-actions-ellipsis-menu {
+		margin: 0;
+	}
+}
