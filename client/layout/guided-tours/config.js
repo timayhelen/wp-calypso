@@ -166,12 +166,12 @@ const tours = {
 			text: i18n.translate( 'You can filter between free & paid themes. Try filtering by free themes' ),
 			type: 'ActionStep',
 			target: 'themes-tier-dropdown',
-			placement: 'below',
+			placement: 'above',
 			continueIf: state => {
 				const params = getQueryParams( state );
 				return params && params.tier === 'free';
 			},
-			arrow: 'top-right',
+			arrow: 'bottom-right',
 			next: 'choose-theme',
 		},
 		mobileFilter: {
@@ -190,7 +190,7 @@ const tours = {
 		'choose-theme': {
 			text: i18n.translate( 'Tap on any theme to see more details, or tap ••• to open all the theme options.' ),
 			type: 'ActionStep',
-			placement: 'right',
+			placement: 'center',
 			showInContext: state => getSectionName( state ) === 'themes',
 			continueIf: state => getSectionName( state ) === 'theme',
 			next: 'tab-bar',
@@ -198,10 +198,9 @@ const tours = {
 		'tab-bar': {
 			text: i18n.translate( 'Here you can read all the details about the theme, its support — and if available, the setup documentation.' ),
 			type: 'BasicStep',
-			placement: 'beside',
+			placement: 'center',
 			target: '.section-nav',
 			showInContext: state => getSectionName( state ) === 'theme',
-			arrow: 'left-top',
 			next: 'live-preview',
 		},
 		'live-preview': {
@@ -214,7 +213,7 @@ const tours = {
 			next: 'close-preview',
 		},
 		'close-preview': {
-			target: 'web-preview__close',
+			target: '.web-preview.is-visible [data-tip-target="web-preview__close"]',
 			arrow: 'left-top',
 			type: 'ActionStep',
 			placement: 'beside',
