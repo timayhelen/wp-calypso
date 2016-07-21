@@ -40,25 +40,17 @@ export const SocialItem = props => {
 	);
 
 	return (
-		<div className={ classes } onClick={ () => onClick( service ) }>
+		<div className={ classes } onClick={ onClick }>
 			<div className="vertical-menu__items__social-icon">
 				<SocialLogo icon={ icon } size={ 24 } />
-			</div>
-			{ label }
+			</div> { label }
 		</div>
 	);
 };
 
 SocialItem.propTypes = {
-	isSelected: PropTypes.bool,
-	onClick: PropTypes.func,
 	service: PropTypes.oneOf( Object.keys( services( identity ) ) ).isRequired,
 	translate: PropTypes.func.isRequired
-};
-
-SocialItem.defaultProps = {
-	isSelected: false,
-	onClick: identity
 };
 
 export default localize( SocialItem );

@@ -3,14 +3,12 @@
 /**
  * External dependencies
  */
-import React, { PropTypes } from 'react';
-import PureComponent from 'react-pure-render/component';
+import React, { Component, PropTypes } from 'react';
 import {
-	identity,
 	partial
 } from 'lodash';
 
-export class VerticalMenu extends PureComponent {
+export class VerticalMenu extends Component {
 	constructor( props ) {
 		super( props );
 
@@ -21,10 +19,8 @@ export class VerticalMenu extends PureComponent {
 		this.select = this.select.bind( this );
 	}
 
-	select( selectedIndex, ...args ) {
-		const { onClick } = this.props;
-
-		this.setState( { selectedIndex }, partial( onClick, ...args ) );
+	select( selectedIndex ) {
+		this.setState( { selectedIndex } );
 	}
 
 	render() {
@@ -45,14 +41,9 @@ export class VerticalMenu extends PureComponent {
 }
 
 VerticalMenu.propTypes = {
-	onClick: PropTypes.func,
 	children: PropTypes.arrayOf(
 		PropTypes.element
 	)
-};
-
-VerticalMenu.defaultProps = {
-	onClick: identity
 };
 
 export default VerticalMenu;
