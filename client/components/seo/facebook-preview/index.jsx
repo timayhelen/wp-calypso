@@ -1,5 +1,5 @@
-import React, { Component, PropTypes } from 'react';
-import shallowCompare from 'react-addons-shallow-compare';
+import React, { PropTypes } from 'react';
+import PureComponent from 'react-pure-render/component';
 
 import {
 	firstValid,
@@ -25,11 +25,7 @@ const facebookDescription = firstValid(
 	hardTruncation( DESCRIPTION_LENGTH )
 );
 
-export class FacebookPreview extends Component {
-	shouldComponentUpdate( nextProps, nextState ) {
-		return shallowCompare( this, nextProps, nextState );
-	}
-
+export class FacebookPreview extends PureComponent {
 	render() {
 		const {
 			url,
