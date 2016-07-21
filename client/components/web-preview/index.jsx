@@ -217,7 +217,7 @@ export class WebPreview extends Component {
 									}
 								</div>
 							}
-							{ this.shouldRenderIframe() &&
+							{ false && this.shouldRenderIframe() &&
 								<iframe
 									ref={ r => this.iframe = r }
 									className="web-preview__frame"
