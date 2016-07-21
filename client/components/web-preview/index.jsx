@@ -19,6 +19,7 @@ import { isMobile } from 'lib/viewport';
 import { localize } from 'i18n-calypso';
 import Spinner from 'components/spinner';
 import RootChild from 'components/root-child';
+import SeoPreviewPane from './seo-preview-pane';
 import { setPreviewShowing } from 'state/ui/actions';
 
 const debug = debugModule( 'calypso:web-preview' );
@@ -155,7 +156,7 @@ export class WebPreview extends Component {
 	shouldRenderIframe() {
 		// Don't preload iframe on mobile devices as bandwidth is typically more limited and
 		// the preview causes weird issues
-		return ! this._isMobile || this.props.showPreview;
+		return ( ! this._isMobile || this.props.showPreview ) && 'seo' !== this.state.device;
 	}
 
 	setDeviceViewport( device = 'computer' ) {
@@ -198,9 +199,11 @@ export class WebPreview extends Component {
 							{ ...this.props }
 							showExternal={ ( this.props.previewUrl ? this.props.showExternal : false ) }
 							showDeviceSwitcher={ this.props.showDeviceSwitcher && ! this._isMobile }
+							showSeo={ true }
+							selectSeoPreview={ this.setDeviceViewport.bind( null, 'seo' ) }
 						/>
 						<div className="web-preview__placeholder">
-							{ ! this.state.loaded &&
+							{ ! this.state.loaded && 'seo' !== this.state.device &&
 								<div>
 									<Spinner />
 									{ this.props.loadingMessage &&
@@ -218,6 +221,9 @@ export class WebPreview extends Component {
 									onLoad={ this.setLoaded }
 									title={ this.props.iframeTitle || translate( 'Preview' ) }
 								/>
+							}
+							{ 'seo' === this.state.device &&
+								<SeoPreviewPane type="site" siteId="" postId="" pageId=""/>
 							}
 						</div>
 					</div>
