@@ -22,8 +22,8 @@ import RootChild from 'components/root-child';
 import SeoPreviewPane from 'components/seo-preview-pane';
 import { setPreviewShowing } from 'state/ui/actions';
 
-import VerticalSelector from 'components/vertical-selector';
-import SocialItem from 'components/vertical-selector/items/social-item';
+import VerticalMenu from 'components/vertical-menu';
+import SocialItem from 'components/vertical-menu/items/social-item';
 
 const debug = debugModule( 'calypso:web-preview' );
 
