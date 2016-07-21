@@ -1,14 +1,26 @@
 #!/usr/bin/env node
-const child_process = require( 'child_process' );
+
 const path = require( 'path' );
+const child_process = require( 'child_process' );
 const stylish = require( 'eslint/lib/formatters/stylish' );
 const exitCodeFromEslint = require( './eslint-formatters-calypso/src/lib/exit-code' );
 
-var args = [ '--cache', '--quiet', '--ext=.js', '--ext=.jsx', '--format=json' ];
+var args = [ '--cache', '--quiet', '--ext=.js', '--ext=.jsx' ];
+
+const argsBranchName = [ 'rev-parse', '--abbrev-ref', 'HEAD' ];
+const branchName = child_process.spawnSync( 'git', argsBranchName ).stdout.toString().trim();
+
+if ( branchName === 'master' ) {
+	args = args.concat( '--format=./bin/eslint-formatters-calypso/src/formatters/parsing-errors.js' );
+} else {
+	args = args.concat( '--format=./bin/eslint-formatters-calypso/src/formatters/lines-modified-and-specific-rules.js' );
+}
+
 if ( process.argv.length > 2 ) {
 	args = args.concat( process.argv.slice( 2 ) );
 } else {
-	args = args.concat( [ '--format=json', '.' ] );
+	process.stdout.write( 'No files to lint\n' );
+	process.exit( 0 );
 }
 
 const results = child_process.spawnSync( path.join( '.', 'node_modules', '.bin', 'eslint' ), args );
@@ -22,8 +34,9 @@ if ( results.stderr ) {
 }
 
 process.on( 'exit', function() {
-	if( results.stdout ){
-	    process.exit( exitCodeFromEslint( report ) );
+	if ( results.stdout ) {
+		process.exit( exitCodeFromEslint( report ) );
 	}
 	process.exit( results.status );
 } );
+
