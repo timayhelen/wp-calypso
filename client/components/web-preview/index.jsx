@@ -22,6 +22,9 @@ import RootChild from 'components/root-child';
 import SeoPreviewPane from 'components/seo-preview-pane';
 import { setPreviewShowing } from 'state/ui/actions';
 
+import VerticalSelector from 'components/vertical-selector';
+import SocialItem from 'components/vertical-selector/items/social-item';
+
 const debug = debugModule( 'calypso:web-preview' );
 
 export class WebPreview extends Component {
@@ -214,7 +217,7 @@ export class WebPreview extends Component {
 									}
 								</div>
 							}
-							{ this.shouldRenderIframe() &&
+							{ false && this.shouldRenderIframe() &&
 								<iframe
 									ref={ r => this.iframe = r }
 									className="web-preview__frame"
@@ -224,8 +227,7 @@ export class WebPreview extends Component {
 								/>
 							}
 							{ 'seo' === this.state.device &&
-								<SeoPreviewPane type="site" siteId="" postId="" pageId=""/>
-							}
+								<SeoPreviewPane type="site" siteId="" postId="" pageId=""/> }
 						</div>
 					</div>
 				</div>
