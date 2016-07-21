@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import { localize } from 'i18n-calypso';
 
 import VerticalMenu from 'components/vertical-menu';
-import SocialItem from 'components/vertical-menu/items';
+import { SocialItem } from 'components/vertical-menu/items';
 
 export class SeoPreviewPane extends PureComponent {
 	render() {
