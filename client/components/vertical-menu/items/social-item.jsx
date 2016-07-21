@@ -8,7 +8,8 @@ import classNames from 'classnames';
 import { localize } from 'i18n-calypso';
 import {
 	get,
-	identity
+	identity,
+	partial
 } from 'lodash';
 
 /**
