@@ -6,13 +6,14 @@ test:
     - NODE_ENV=test make client/config/index.js:
         parallel: true
   override:
-    - bin/run-lint :
+    - [[ $CIRCLE_BRANCH == "master" ]] && ./bin/run-lint --format=./bin/eslint-formatters-calypso/src/formatters/parsing-errors.js :
         parallel: true
         files:
           - client/**/*.js
           - client/**/*.jsx
           - server/**/*.js
           - server/**/*.jsx
+    - [[ $CIRCLE_BRANCH != "master" ]] && ./bin/run-lint --format=./bin/eslint-formatters-calypso/src/formatters/lines-modified-and-specific-rules.js $(git diff --name-only $(git merge-base $(git rev-parse --abbrev-ref HEAD) origin/master)..HEAD *js *jsx)
     - MOCHA_FILE=./test-results-client.xml npm run test-client -- -R mocha-junit-reporter -t $CIRCLE_NODE_TOTAL -i $CIRCLE_NODE_INDEX:
         parallel: true
     - MOCHA_FILE=./test-results-server.xml npm run test-server -- -R mocha-junit-reporter -t $CIRCLE_NODE_TOTAL -i $CIRCLE_NODE_INDEX:
