@@ -1,14 +1,13 @@
+/** @ssr-ready **/
 import React, { PropTypes } from 'react';
-import PureRenderMixin from 'react-pure-render/mixin';
+import PureComponent from 'react-pure-render/component';
 
 const baseDomain = url =>
 	url
 		.replace( /^[^/]+[/]*/, '' ) // strip leading protocol
 		.replace( /\/.*$/, '' ); // strip everything after the domain
 
-export const TwitterPreview = React.createClass( {
-	mixins: [ PureRenderMixin ],
-
+export class TwitterPreview extends PureComponent {
 	render() {
 		const {
 			url,
@@ -42,7 +41,7 @@ export const TwitterPreview = React.createClass( {
 			</div>
 		);
 	}
-} );
+}
 
 TwitterPreview.propTypes = {
 	url: PropTypes.string,

@@ -16,7 +16,6 @@ import Card from 'components/card';
 import Button from 'components/button';
 import SectionHeader from 'components/section-header';
 import ExternalLink from 'components/external-link';
-import TwitterPreview from 'components/seo/twitter-preview';
 import MetaTitleEditor from 'components/seo/meta-title-editor';
 import Notice from 'components/notice';
 import NoticeAction from 'components/notice/notice-action';
@@ -319,24 +318,6 @@ export const SeoForm = React.createClass( {
 									title={ seoTitle }
 									url={ siteUrl }
 									snippet={ seoMetaDescription }
-								/>
-
-								<TwitterPreview
-									title={ seoTitle }
-									url={ siteUrl }
-									type="summary"
-									description={ seoMetaDescription }
-									image={ blavatarUrl }
-								/>
-
-								<div style={ { marginBottom: '2em' } }>&nbsp;</div>
-
-								<TwitterPreview
-									title={ seoTitle }
-									url={ siteUrl }
-									type="large_image_summary"
-									description={ seoMetaDescription }
-									image={ blavatarUrl }
 								/>
 
 							</FormFieldset>
