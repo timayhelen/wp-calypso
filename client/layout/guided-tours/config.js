@@ -124,7 +124,7 @@ const tours = {
 			path: '/design',
 			// insert magical new selectors here
 			// don't enable this in production (yet)
-			context: () => 'production' !== config( 'env' ),
+			context: () => config.isEnabled( 'guided-tours/themes' ),
 		},
 		description: 'Learn how to find and activate a theme',
 		showInContext: state => getSectionName( state ) === 'themes',
