@@ -6,7 +6,7 @@ import { expect } from 'chai';
 /**
  * Internal dependencies
  */
-import { getCurrentLayoutFocus, getPreviousLayoutFocus, getNextLayoutFocus } from '../../selectors';
+import { getCurrentLayoutFocus, getPreviousLayoutFocus, getNextLayoutFocus } from '../../layout-focus/selectors';
 
 describe( 'selectors', () => {
 	let state;

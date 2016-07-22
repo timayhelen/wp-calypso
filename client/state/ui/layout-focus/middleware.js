@@ -6,8 +6,8 @@ import {
 	LAYOUT_NEXT_FOCUS_ACTIVATE,
 	LAYOUT_NEXT_FOCUS_SET,
 } from 'state/action-types';
-import { getCurrentLayoutFocus } from 'state/ui/selectors';
-import { setLayoutFocus } from 'state/ui/actions';
+import { getCurrentLayoutFocus } from 'state/ui/layout-focus/selectors';
+import { setLayoutFocus } from 'state/ui/layout-focus/actions';
 import layoutFocus from 'lib/layout-focus';
 
 /**
