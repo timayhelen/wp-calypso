@@ -18,7 +18,7 @@ import { SocialItem } from 'components/vertical-menu/items';
 import { getSelectedSite } from 'state/ui/selectors';
 
 const ComingSoonMessage = translate => (
-	<div className="web-preview__seo-preview-pane__message">
+	<div className="seo-preview-pane__message">
 		{ translate( 'Coming Soon!' ) }
 	</div>
 );
@@ -53,13 +53,13 @@ export class SeoPreviewPane extends PureComponent {
 		const { selectedService } = this.state;
 
 		return (
-			<div className="web-preview__seo-preview-pane">
-				<div className="web-preview__seo-preview-pane__sidebar">
-					<div className="web-preview__seo-preview-pane__explanation">
-						<h1 className="web-preview__seo-preview-pane__title">
+			<div className="seo-preview-pane">
+				<div className="seo-preview-pane__sidebar">
+					<div className="seo-preview-pane__explanation">
+						<h1 className="seo-preview-pane__title">
 							{ translate( 'External previews' ) }
 						</h1>
-						<p className="web-preview__seo-preview-pane__description">
+						<p className="seo-preview-pane__description">
 							{ translate(
 								`Below you'll find previews that ` +
 								`represent how your post will look ` +
@@ -76,13 +76,13 @@ export class SeoPreviewPane extends PureComponent {
 						<SocialItem service="twitter" />
 					</VerticalMenu>
 				</div>
-				<div className="web-preview__seo-preview-pane__preview-area">
-					<div className="web-preview__seo-preview-pane__preview">
+				<div className="seo-preview-pane__preview-area">
+					<div className="seo-preview-pane__preview">
 						{ get( {
 							google: GooglePreview( site )
 						}, selectedService, ComingSoonMessage( translate ) ) }
 					</div>
-					<div className="web-preview__seo-preview-pane__preview-spacer" />
+					<div className="seo-preview-pane__preview-spacer" />
 				</div>
 			</div>
 		);
