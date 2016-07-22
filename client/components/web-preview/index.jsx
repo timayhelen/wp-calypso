@@ -186,6 +186,7 @@ export class WebPreview extends Component {
 			'is-computer': this.state.device === 'computer',
 			'is-tablet': this.state.device === 'tablet',
 			'is-phone': this.state.device === 'phone',
+			'is-seo': this.state.device === 'seo',
 			'is-loaded': this.state.loaded,
 		} );
 

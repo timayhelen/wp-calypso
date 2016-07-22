@@ -72,7 +72,11 @@ export const PreviewToolbar = props => {
 			{ showSeo &&
 				<button
 					aria-label={ translate( 'Show SEO and search previews' ) }
-					className='web-preview__seo-button web-preview__device-button'
+					className={ classNames(
+						'web-preview__seo-button',
+						'web-preview__device-button', {
+						'is-active': 'seo' === currentDevice
+					} ) }
 					onClick={ selectSeoPreview }
 				>
 					<Gridicon icon="share" />
