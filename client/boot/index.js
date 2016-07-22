@@ -54,7 +54,7 @@ var config = require( 'config' ),
 	// The following components require the i18n mixin, so must be required after i18n is initialized
 	Layout;
 
-import { setLayoutFocus } from 'state/ui/actions';
+import { setLayoutFocus } from 'state/ui/layout-focus/actions';
 
 function init() {
 	var i18nLocaleStringsObject = null;
