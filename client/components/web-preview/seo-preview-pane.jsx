@@ -17,6 +17,12 @@ import VerticalMenu from 'components/vertical-menu';
 import { SocialItem } from 'components/vertical-menu/items';
 import { getSelectedSite } from 'state/ui/selectors';
 
+const ComingSoonMessage = translate => (
+	<div className="web-preview__seo-preview-pane__message">
+		{ translate( 'Coming Soon!' ) }
+	</div>
+);
+
 const GooglePreview = site =>
 	<SearchPreview
 		title={ site.name }
@@ -70,10 +76,13 @@ export class SeoPreviewPane extends PureComponent {
 						<SocialItem service="twitter" />
 					</VerticalMenu>
 				</div>
-				<div className="web-preview__seo-preview-pane__preview">
-					{ get( {
-						google: GooglePreview( site )
-					}, selectedService ) }
+				<div className="web-preview__seo-preview-pane__preview-area">
+					<div className="web-preview__seo-preview-pane__preview">
+						{ get( {
+							google: GooglePreview( site )
+						}, selectedService, ComingSoonMessage( translate ) ) }
+					</div>
+					<div className="web-preview__seo-preview-pane__preview-spacer" />
 				</div>
 			</div>
 		);
