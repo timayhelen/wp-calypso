@@ -19,7 +19,7 @@ import { isMobile } from 'lib/viewport';
 import { localize } from 'i18n-calypso';
 import Spinner from 'components/spinner';
 import RootChild from 'components/root-child';
-import SeoPreviewPane from './seo-preview-pane';
+import SeoPreviewPane from 'components/seo-preview-pane';
 import { setPreviewShowing } from 'state/ui/actions';
 
 const debug = debugModule( 'calypso:web-preview' );
