@@ -37,7 +37,7 @@ var MasterbarLoggedIn = require( 'layout/masterbar/logged-in' ),
 
 import { isOffline } from 'state/application/selectors';
 import DesignPreview from 'my-sites/design-preview';
-import { getCurrentLayoutFocus } from 'state/ui/selectors';
+import { getCurrentLayoutFocus } from 'state/ui/layout-focus/selectors';
 
 if ( config.isEnabled( 'keyboard-shortcuts' ) ) {
 	KeyboardShortcutsMenu = require( 'lib/keyboard-shortcuts/menu' );
