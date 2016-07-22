@@ -16,7 +16,6 @@ import Card from 'components/card';
 import Button from 'components/button';
 import SectionHeader from 'components/section-header';
 import ExternalLink from 'components/external-link';
-import FacebookPreview from 'components/seo/facebook-preview';
 import MetaTitleEditor from 'components/seo/meta-title-editor';
 import Notice from 'components/notice';
 import NoticeAction from 'components/notice/notice-action';
@@ -319,24 +318,6 @@ export const SeoForm = React.createClass( {
 									title={ seoTitle }
 									url={ siteUrl }
 									snippet={ seoMetaDescription }
-								/>
-
-								<FacebookPreview
-									title={ seoTitle }
-									url={ siteUrl }
-									type="website"
-									description={ seoMetaDescription }
-									image={ blavatarUrl }
-								/>
-
-								<div style={ { marginBottom: '2em' } }>&nbsp;</div>
-
-								<FacebookPreview
-									title={ seoTitle }
-									url={ siteUrl }
-									type="article"
-									description={ seoMetaDescription }
-									image={ blavatarUrl }
 								/>
 							</FormFieldset>
 

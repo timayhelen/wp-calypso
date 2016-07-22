@@ -1,4 +1,9 @@
-import find from 'lodash/find';
+/** @ssr-ready **/
+
+/**
+ * External dependencies
+ */
+import { find } from 'lodash';
 
 export const shortEnough = limit => title => title.length <= limit ? title : false;
 
