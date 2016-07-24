@@ -49,7 +49,7 @@ const layoutFocus = {
 	},
 
 	set: function( area ) {
-		if ( ! isValid( area ) || area === this._current ) {
+		if ( area === this._current || ! isValid( area ) ) {
 			return;
 		}
 
