@@ -19,12 +19,12 @@ const isValidArea = area => includes( validAreas, area );
 export default function layoutFocus( state = initialState, action ) {
 	switch ( action.type ) {
 		case LAYOUT_FOCUS_SET:
-			if ( ! isValidArea( action.area ) || action.area === state.current ) {
+			if ( action.area === state.current || ! isValidArea( action.area ) ) {
 				return state;
 			}
 			return Object.assign( {}, state, { current: action.area, previous: state.current } );
 		case LAYOUT_NEXT_FOCUS_SET:
-			if ( ! isValidArea( action.area ) || action.area === state.next ) {
+			if ( action.area === state.next || ! isValidArea( action.area ) ) {
 				return state;
 			}
 			return Object.assign( {}, state, { next: action.area } );
