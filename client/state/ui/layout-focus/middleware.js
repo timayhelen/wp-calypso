@@ -10,6 +10,8 @@ import { getCurrentLayoutFocus } from 'state/ui/layout-focus/selectors';
 import { setLayoutFocus } from 'state/ui/layout-focus/actions';
 import layoutFocus from 'lib/layout-focus';
 
+let syncFocusToRedux;
+
 /**
  * Temporary Redux middleware intended to replay dispatched Redux layout focus
  * operations on the legacy `lib/layout-focus` module and sync legacy area
@@ -18,12 +20,16 @@ import layoutFocus from 'lib/layout-focus';
  * @return {Function} Redux middleware
  */
 export default ( { dispatch, getState } ) => {
-	layoutFocus.on( 'change', () => {
+	if ( syncFocusToRedux ) {
+		layoutFocus.off( 'change', syncFocusToRedux );
+	}
+	syncFocusToRedux = () => {
 		const currentFocus = layoutFocus.getCurrent();
 		if ( currentFocus !== getCurrentLayoutFocus( getState() ) ) {
 			dispatch( setLayoutFocus( currentFocus ) );
 		}
-	} );
+	};
+	layoutFocus.on( 'change', syncFocusToRedux );
 
 	return ( next ) => ( action ) => {
 		switch ( action.type ) {
