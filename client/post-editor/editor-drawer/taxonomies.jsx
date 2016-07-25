@@ -9,6 +9,7 @@ import { localize } from 'i18n-calypso';
 /**
  * Internal dependencies
  */
+import { decodeEntities } from 'lib/formatting';
 import QueryTaxonomies from 'components/data/query-taxonomies';
 import { getSelectedSiteId } from 'state/ui/selectors';
 import { getEditorPostId } from 'state/ui/editor/selectors';
@@ -55,7 +56,9 @@ function EditorDrawerTaxonomies( { translate, siteId, postType, taxonomies, term
 					} );
 				} else {
 					// Terms can be an array of strings or objects with `name`
-					subtitle = map( taxonomyTerms, ( term ) => term.name || term ).join( ', ' );
+					subtitle = map( taxonomyTerms, ( term ) => {
+						return decodeEntities( term.name || term );
+					} ).join( ', ' );
 				}
 
 				return memo.concat(
