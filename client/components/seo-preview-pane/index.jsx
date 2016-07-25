@@ -100,6 +100,7 @@ export class SeoPreviewPane extends PureComponent {
 				<div className="seo-preview-pane__preview-area">
 					<div className="seo-preview-pane__preview">
 						{ get( {
+							facebook: PreviewFacebook( site ),
 							google: GooglePreview( site )
 						}, selectedService, ComingSoonMessage( translate ) ) }
 					</div>
