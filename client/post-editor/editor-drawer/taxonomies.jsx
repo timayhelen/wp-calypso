@@ -54,7 +54,8 @@ function EditorDrawerTaxonomies( { translate, siteId, postType, taxonomies, term
 						args: [ taxonomyTermsCount ]
 					} );
 				} else {
-					subtitle = map( taxonomyTerms, 'name' ).join( ', ' );
+					// Terms can be an array of strings or objects with `name`
+					subtitle = map( taxonomyTerms, ( term ) => term.name || term ).join( ', ' );
 				}
 
 				return memo.concat(
