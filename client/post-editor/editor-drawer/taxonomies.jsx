@@ -3,7 +3,8 @@
  */
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { reduce, includes } from 'lodash';
+import { reduce, size, map, get, includes } from 'lodash';
+import { localize } from 'i18n-calypso';
 
 /**
  * Internal dependencies
@@ -30,7 +31,7 @@ function isSkippedTaxonomy( postType, taxonomy ) {
 	return false;
 }
 
-function EditorDrawerTaxonomies( { siteId, postType, taxonomies } ) {
+function EditorDrawerTaxonomies( { translate, siteId, postType, taxonomies, terms } ) {
 	return (
 		<div className="editor-drawer__taxonomies">
 			{ siteId && postType && (
@@ -43,13 +44,25 @@ function EditorDrawerTaxonomies( { siteId, postType, taxonomies } ) {
 					return memo;
 				}
 
-				const icon = hierarchical ? 'folder' : 'tag';
+				const taxonomyTerms = get( terms, name );
+				const taxonomyTermsCount = size( taxonomyTerms );
+
+				let subtitle;
+				if ( taxonomyTermsCount > 2 ) {
+					subtitle = translate( '%d selected', '%d selected', {
+						count: taxonomyTermsCount,
+						args: [ taxonomyTermsCount ]
+					} );
+				} else {
+					subtitle = map( taxonomyTerms, 'name' ).join( ', ' );
+				}
 
 				return memo.concat(
 					<Accordion
 						key={ name }
 						title={ label }
-						icon={ <Gridicon icon={ icon } /> }
+						subtitle={ subtitle }
+						icon={ <Gridicon icon={ hierarchical ? 'folder' : 'tag' } /> }
 					>
 					{ hierarchical
 						? <TermSelector taxonomyName={ name } />
@@ -63,18 +76,25 @@ function EditorDrawerTaxonomies( { siteId, postType, taxonomies } ) {
 }
 
 EditorDrawerTaxonomies.propTypes = {
+	translate: PropTypes.func,
 	siteId: PropTypes.number,
 	postType: PropTypes.string,
+	terms: PropTypes.oneOfType( [
+		PropTypes.object,
+		PropTypes.array
+	] ),
 	taxonomies: PropTypes.array,
 };
 
 export default connect( ( state ) => {
 	const siteId = getSelectedSiteId( state );
-	const postType = getEditedPostValue( state, siteId, getEditorPostId( state ), 'type' );
+	const postId = getEditorPostId( state );
+	const postType = getEditedPostValue( state, siteId, postId, 'type' );
 
 	return {
 		siteId,
 		postType,
+		terms: getEditedPostValue( state, siteId, postId, 'terms' ),
 		taxonomies: getPostTypeTaxonomies( state, siteId, postType )
 	};
-} )( EditorDrawerTaxonomies );
+} )( localize( EditorDrawerTaxonomies ) );
