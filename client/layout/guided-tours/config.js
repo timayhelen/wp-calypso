@@ -122,9 +122,8 @@ const tours = {
 		meta: {
 			version: '20160609',
 			path: '/design',
-			// insert magical new selectors here
 			// don't enable this in production (yet)
-			context: () => config.isEnabled( 'guided-tours/themes' ),
+			context: ( state ) => config.isEnabled( 'guided-tours/themes' ) && isNewUser( state ),
 		},
 		description: 'Learn how to find and activate a theme',
 		showInContext: state => getSectionName( state ) === 'themes',
