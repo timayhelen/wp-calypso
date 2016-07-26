@@ -90,10 +90,7 @@ export class SeoPreviewPane extends PureComponent {
 }
 
 SeoPreviewPane.propTypes = {
-	type: PropTypes.oneOf( [ 'site', 'page', 'post' ] ).isRequired,
-	siteId: PropTypes.number.isRequired,
-	postId: PropTypes.number.isRequired,
-	pageId: PropTypes.number.isRequired
+	type: PropTypes.oneOf( [ 'site', 'page', 'post' ] ).isRequired
 };
 
 const mapStateToProps = state => ( {
