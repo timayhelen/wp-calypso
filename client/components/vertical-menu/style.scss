@@ -15,6 +15,8 @@
 	color: $gray;
 	font-weight: 200;
 
+	cursor: pointer;
+
 	justify-content: flex-start;
 	align-items: center;
 
@@ -22,6 +24,10 @@
 		border-left: 3px solid $blue-wordpress;
 		color: darken( $gray, 30% );
 		font-weight: 400;
+	}
+
+	&:not(.is-selected):hover {
+		color: $blue-medium;
 	}
 }
 

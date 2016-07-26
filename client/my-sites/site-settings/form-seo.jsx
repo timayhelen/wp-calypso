@@ -234,7 +234,6 @@ export const SeoForm = React.createClass( {
 			: siteTitle;
 		const siteUrl = `https://${ slug }/`;
 		const sitemapUrl = `${ siteUrl }/sitemap.xml`;
-		const blavatarUrl = `${ get( this.props, 'site.icon.img', '//gravatar.com/avatar/' ) }?s=512`;
 		const generalTabUrl = getGeneralTabUrl( slug );
 		const placeholderTagContent = '1234';
 
